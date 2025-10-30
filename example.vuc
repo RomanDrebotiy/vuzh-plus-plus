@@ -1,0 +1,52 @@
+FUNC factorial n
+SUB n 1 t0
+GOTOIFNOT t0 7
+SUB n 1 n1
+CALL factorial n1 x
+MUL n x res
+RETURN res
+RETURN 1
+ENDFUNC
+FUNC factorial_sequence start end
+SUB start end t0
+GOTOIFNOT t0 14
+TEXT end_number_should_be_greater_than_start_number
+RETURN
+COPY start i
+SUB end i t0
+GOTOIFNOT t0 20
+CALL factorial i a#i
+ADD i 1 i
+GOTO 15
+TEXT printing_sequence_of_factorials
+COPY start i
+SUB end i t0
+GOTOIFNOT t0 27
+WRITE a#i
+ADD i 1 i
+GOTO 22
+ENDFUNC
+FUNC test1 
+READ start
+READ end
+CALL factorial_sequence start end _
+ENDFUNC
+FUNC test2 
+TEXT just_testing_expression_optimization
+COPY 1 a
+COPY 2 b
+COPY 3 c
+COPY 4 d
+MUL 2 a t1
+ADD a d t0
+DIV c t0 t0
+ADD b t0 t0
+MUL 5 t0 t0
+ADD t1 t0 x
+WRITE x
+ENDFUNC
+FUNC main 
+CALL test1  _
+CALL test2  _
+TEXT Done!
+ENDFUNC

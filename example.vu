@@ -1,0 +1,51 @@
+func> factorial(n) {
+    if[n-1]{
+        n1 = n-1;
+        x = call> factorial(n1);
+        res = n * x;
+        return> res;
+    }
+    return> 1;
+}
+
+func> factorial_sequence(start, end) {
+    if[start-end]{
+        text> end_number_should_be_greater_than_start_number;
+        return>;
+    }
+    i = start;
+    while[end - i]{
+        a#i = call> factorial(i);
+        i = i + 1;
+    }
+    // just testing arrays
+    text> printing_sequence_of_factorials;
+    i = start;
+    while[end - i]{
+        write> a#i;
+        i = i + 1;
+    }
+}
+
+func> test1() {
+    read> start;
+    read> end;
+    call> factorial_sequence(start, end);
+}
+
+func> test2() {
+    text> just_testing_expression_optimization;
+    a = 1;
+    b = 2;
+    c = 3;
+    d = 4;
+    x = 2*a+5*(b+c/(a+d));
+    write> x;
+}
+
+func> main() {
+    call> test1();
+    call> test2();
+    text> Done!;
+}
+
