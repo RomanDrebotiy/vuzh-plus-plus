@@ -17,7 +17,7 @@ Supports:
 - input/output from the console
 
 ## Compilation
-Save your code in .vu file (for example in the same folder when compiler is located) and then pass it to the compiler:
+Save your code in .vu file (for example in the same folder where compiler is located) and then pass it to the compiler:
 ```bash
 python vuzh++compiler.py my_src_code.vu
 ```
@@ -32,7 +32,7 @@ python vuzh++vm.py my_src_code.vuc
 
 Language is created for educational purposes.
 
-Currently, it lacks any error handling and syntax checks with hints.
+Currently, it lacks error handling and syntax checks with hints.
 
 
 *Copyright (c) 2025 Roman Drebotiy*
