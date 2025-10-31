@@ -1,4 +1,4 @@
-# Vuzh++
+# Vuzh++ programming language
 
 <div align="center">
   <img src="Vuzh++_logo.png" width="200">
