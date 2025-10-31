@@ -19,7 +19,7 @@ Supports:
 - input/output from the console
 - only one type: float
 
-## Compilation and code execution
+## Compilation and execution
 Save your code in `.vu` file (for example in the same folder where compiler is located) and then pass it to the compiler:
 ```bash
 python vuzh++compiler.py my_src_code.vu
