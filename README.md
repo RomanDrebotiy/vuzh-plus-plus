@@ -1,6 +1,8 @@
 # Vuzh++
 
-<img src="Vuzh++_logo.png" width="200">
+<div align="center">
+  <img src="Vuzh++_logo.png" width="200">
+</div>
 
 A tiny compiled programming language created for student learning.
 
