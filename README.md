@@ -29,6 +29,13 @@ python vuzh++vm.py my_src_code.vuc
 
 **(!)** You can find some code sample in the repo to explore the syntax.
 
+## Syntax highlighting in VS Code
+
+There is extension available in the folder `vsc_syntax_highlighting_extension`. For the simplest case just execute command to run VS Code with provided full path to that folder. For example on Windows:
+```bash
+code --extensionDevelopmentPath="<FULL_PATH_TO_THIS_FOLDER>\vsc_syntax_highlighting_extension"
+```
+
 ## Notes
 
 Language is created for educational purposes.

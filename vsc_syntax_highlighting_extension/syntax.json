@@ -1,0 +1,56 @@
+{
+  "scopeName": "source.vuzh",
+  "patterns": [
+    {
+      "name": "comment.line.double-slash.vuzh",
+      "match": "//.*$"
+    },
+    {
+      "name": "keyword.declaration.function.vuzh",
+      "match": "\\bfunc>(?=\\s*[a-zA-Z_])"
+    },
+    {
+      "name": "keyword.control.return.vuzh",
+      "match": "\\breturn>"
+    },
+    {
+      "name": "keyword.other.io.vuzh",
+      "match": "\\b(read>|write>|text>)\\b"
+    },
+    {
+      "name": "keyword.other.call.vuzh",
+      "match": "\\bcall>"
+    },
+    {
+      "name": "keyword.control.flow.vuzh",
+      "match": "\\b(if|while)\\b"
+    },
+    {
+      "name": "punctuation.section.brackets.vuzh",
+      "match": "[\\[\\]{}()]"
+    },
+    {
+      "name": "constant.numeric.vuzh",
+      "match": "\\b\\d+(?:\\.\\d+)?\\b"
+    },
+    {
+      "name": "variable.other.vuzh",
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_#]*\\b"
+    },
+    {
+      "name": "keyword.operator.assignment.vuzh",
+      "match": "="
+    },
+    {
+      "name": "keyword.operator.arithmetic.vuzh",
+      "match": "[+\\-*/]"
+    },
+    {
+      "name": "string.unquoted.vuzh",
+      "match": "(?<=text>)\\s*[a-zA-Z0-9_!]+"
+    }
+  ],
+  "fileTypes": ["vu"],
+  "name": "Vuzh",
+  "uuid": "9b77e6a5-4d1a-49a0-a09d-9e31c57c1d20"
+}

@@ -1,0 +1,28 @@
+{
+  "name": "vuzh-syntax",
+  "displayName": "Vuzh++ Syntax Highlighting",
+  "description": "Syntax highlighting for Vuzh++ programming language",
+  "version": "0.0.1",
+  "publisher": "Roman Drebotiy",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "languages": [
+      {
+        "id": "vuzh",
+        "aliases": ["Vuzh++"],
+        "extensions": [".vu"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "vuzh",
+        "scopeName": "source.vuzh",
+        "path": "./syntax.json"
+      }
+    ]
+  }
+}
