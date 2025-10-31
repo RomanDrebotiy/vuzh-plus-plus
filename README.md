@@ -18,7 +18,7 @@ Supports:
 - only one type: float
 
 ## Compilation
-Save your code in .vu file (for example in the same folder where compiler is located) and then pass it to the compiler:
+Save your code in `.vu` file (for example in the same folder where compiler is located) and then pass it to the compiler:
 ```bash
 python vuzh++compiler.py my_src_code.vu
 ```
