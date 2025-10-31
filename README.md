@@ -13,8 +13,9 @@ Supports:
 - conditional blocks
 - functions
 - arrays
-- expression temporary variable optimizations
+- expression temporary variable number optimization
 - input/output from the console
+- only one type: float
 
 ## Compilation
 Save your code in .vu file (for example in the same folder where compiler is located) and then pass it to the compiler:
