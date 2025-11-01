@@ -77,19 +77,28 @@ def prepare_args(params: list[str], args: list):
     }
 
 
-def get_val(var, mem: dict):
+def get_val(var, mem: dict[str, float]):
     if "#" not in var:
         return mem[var] if var in mem else float(var)
     parts = var.split("#")
     return mem[f"{parts[0]}#{int(get_val(parts[1], mem))}"]
 
 
-def set_val(var, mem: dict, val: float):
+def set_val(var, mem: dict[str, float], val: float):
     if "#" not in var:
         mem[var] = float(val)
         return
     parts = var.split("#")
     mem[f"{parts[0]}#{int(get_val(parts[1], mem))}"] = float(val)
+
+
+def get_array_len(var, mem: dict[str, float]) -> int:
+    max_ind = 0
+    for k in mem:
+        if k.startswith(f"{var}#"):
+            _, ind = k.split("#")
+            max_ind = max(int(ind), max_ind)
+    return int(max_ind)
 
 
 def arithmetic_op(op: str, arg1: float, arg2: float) -> float:
@@ -115,6 +124,8 @@ while len(call_stack) > 0:
             print(get_val(cm[1], curr.local_vars))
         elif cm[0] == "TEXT":
             print(cm[1].replace("_", " "))
+        elif cm[0] == "LEN":
+            set_val(cm[2], curr.local_vars, get_array_len(cm[1], curr.local_vars))
         elif cm[0] == "COPY":
             set_val(cm[2], curr.local_vars, get_val(cm[1], curr.local_vars))
         elif cm[0] in ["ADD", "SUB", "MUL", "DIV"]:

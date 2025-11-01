@@ -19,6 +19,9 @@ func> factorial_sequence(start, end) {
         i = i + 1;
     }
     // just testing arrays
+    l = len> a;
+    text> printing_initialized_array_length;
+    write> l;
     text> printing_sequence_of_factorials;
     i = start;
     while[end - i]{

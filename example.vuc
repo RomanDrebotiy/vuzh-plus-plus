@@ -18,13 +18,16 @@ GOTOIFNOT t0 20
 CALL factorial i a#i
 ADD i 1 i
 GOTO 15
+LEN a l
+TEXT printing_initialized_array_length
+WRITE l
 TEXT printing_sequence_of_factorials
 COPY start i
 SUB end i t0
-GOTOIFNOT t0 27
+GOTOIFNOT t0 30
 WRITE a#i
 ADD i 1 i
-GOTO 22
+GOTO 25
 ENDFUNC
 FUNC test1 
 READ start

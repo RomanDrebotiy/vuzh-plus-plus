@@ -15,6 +15,8 @@ Supports:
 - conditional blocks
 - functions
 - arrays
+  - with `len` operator
+  - Pascal-style indexing (starting from 1)
 - expression temporary variable number optimization
 - input/output from the console
 - only one type: float

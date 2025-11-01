@@ -202,6 +202,9 @@ def handle_command():
     elif tokens[ind+2] == "call":
         res_var = tokens[ind]
         handle_call_command(res_var)
+    elif tokens[ind+2] == "len":
+        commands.append(f"{tokens[ind+2].upper()} {tokens[ind + 4]} {tokens[ind]}")
+        ind += 6
     elif tokens[ind+3] == ";":
         commands.append(f"COPY {tokens[ind+2]} {tokens[ind]}")
         ind += 4
