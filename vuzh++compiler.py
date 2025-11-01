@@ -187,7 +187,10 @@ def handle_call_command(res_var: str = None):
 
 def handle_command():
     global ind
-    if tokens[ind] in ["read", "write", "text"]:
+    if tokens[ind] in ["fread", "fwrite"]:
+        commands.append(f"{tokens[ind].upper()} {tokens[ind+2]} {tokens[ind+4]}")
+        ind += 6
+    elif tokens[ind] in ["read", "write", "text"]:
         commands.append(f"{tokens[ind].upper()} {tokens[ind+2]}")
         ind += 4
     elif tokens[ind] == "return":

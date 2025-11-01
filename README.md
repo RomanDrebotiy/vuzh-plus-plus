@@ -20,7 +20,8 @@ Supports:
   - can be passed and returned from functions (by value)
 - expression temporary variable number optimization
 - input/output from the console
-- only one type: float
+- input/output from file (isolated float values or arrays)
+- only one basic type: float
 
 ## Compilation and execution
 Save your code in `.vu` file (for example in the same folder where compiler is located) and then pass it to the compiler. On Windows:

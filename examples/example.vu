@@ -38,9 +38,11 @@ func> test1() {
     read> start;
     read> end;
     results = call> factorial_sequence(start, end);
-    call> print_res(start, end, results);
-    text> printing_second_time_other_way;
-    write> results;
+    if[results] {
+        call> print_res(start, end, results);
+        text> printing_second_time_other_way;
+        write> results;
+    }
 }
 
 func> test2() {
@@ -70,15 +72,27 @@ func> test3() {
     res = call> test_matrix();
     text> testing_2D_arrays;
     write> res;
+    // Writing matrix also to file.
+    // Always use Windows-style separator!
+    fwrite> res, .\examples\test.txt;
     text> output_dimensions_lengths;
     l = len> res;
     write> l;
+}
+
+func> test4() {
+    text> reading_matrix_from_file;
+    fread> arr, .\examples\test.txt;
+    write> arr;
+    text> testing_element_value_at_position_2_3;
+    write> arr#2:3;
 }
 
 func> main() {
     call> test1();
     call> test2();
     call> test3();
+    call> test4();
     text> Done!;
 }
 

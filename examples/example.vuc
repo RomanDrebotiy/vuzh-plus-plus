@@ -36,6 +36,7 @@ FUNC test1
 READ start
 READ end
 CALL factorial_sequence start end results
+GOTOIFNOT results 42
 CALL print_res start end results _
 TEXT printing_second_time_other_way
 WRITE results
@@ -57,28 +58,37 @@ ENDFUNC
 FUNC test_matrix 
 COPY 1 i
 SUB 3 i t0
-GOTOIFNOT t0 68
+GOTOIFNOT t0 69
 COPY 1 j
 SUB 3 j t0
-GOTOIFNOT t0 66
+GOTOIFNOT t0 67
 ADD i j a#i:j
 ADD j 1 j
-GOTO 61
+GOTO 62
 ADD i 1 i
-GOTO 58
+GOTO 59
 RETURN a
 ENDFUNC
 FUNC test3 
 CALL test_matrix  res
 TEXT testing_2D_arrays
 WRITE res
+FWRITE res .\examples\test.txt
 TEXT output_dimensions_lengths
 LEN res l
 WRITE l
+ENDFUNC
+FUNC test4 
+TEXT reading_matrix_from_file
+FREAD arr .\examples\test.txt
+WRITE arr
+TEXT testing_element_value_at_position_2_3
+WRITE arr#2:3
 ENDFUNC
 FUNC main 
 CALL test1  _
 CALL test2  _
 CALL test3  _
+CALL test4  _
 TEXT Done!
 ENDFUNC

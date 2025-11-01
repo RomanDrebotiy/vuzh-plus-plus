@@ -1,6 +1,7 @@
 # Copyright (c) 2025 Roman Drebotiy
 # Licensed under the Apache License 2.0 (see LICENSE file)
 
+import os
 import sys
 from pathlib import Path
 
@@ -81,10 +82,15 @@ def prepare_args(params: list[str], args: list):
     return result
 
 
-def get_val(var, mem: dict[str, float]) -> float | dict[str, float]:
+def get_val(var, mem: dict[str, float]) -> float | dict[str, float] | None:
     if "#" not in var:
         if get_array_len(var, mem) == 0:
-            return mem[var] if var in mem else float(var)
+            if var in mem:
+                return mem[var]
+            try:
+                return float(var)
+            except ValueError:
+                return None
         arr_vals = {}
         for k in mem:
             if k.startswith(f"{var}#"):
@@ -94,7 +100,10 @@ def get_val(var, mem: dict[str, float]) -> float | dict[str, float]:
     parts = var.split("#")
     indices = parts[1].split(":")
     indices_actual = ":".join([str(int(get_val(i, mem))) for i in indices])
-    return mem[f"{parts[0]}#{indices_actual}"]
+    ind = f"{parts[0]}#{indices_actual}"
+    if ind in mem:
+        return mem[ind]
+    return None
 
 
 def set_val(var, mem: dict[str, float], val: float):
@@ -124,6 +133,33 @@ def get_array_len(var, mem: dict[str, float]) -> int | list[int]:
     return 0
 
 
+def get_output(var: str, curr: StackFrame) -> str:
+    val = get_val(var, curr.local_vars)
+    output = ""
+    if isinstance(val, dict):
+        arr_len = get_array_len(var, curr.local_vars)
+        if isinstance(arr_len, int):
+            arr_len = [arr_len]
+        if len(arr_len) == 1:
+            row = ""
+            for j in range(1, arr_len[0] + 1):
+                v = val.get(f"{j}")
+                row += f"{v:5.2f} " if v else "    _"
+            output += f"{row}\n"
+        elif len(arr_len) == 2:
+            for i in range(1, arr_len[0] + 1):
+                row = ""
+                for j in range(1, arr_len[1] + 1):
+                    v = val.get(f"{i}:{j}")
+                    row += f"{v:5.2f} " if v else "    _"
+                output += f"{row}\n"
+        else:
+            for ind in val:
+                output += f"{var}#{ind} => {val[ind]}\n"
+    else:
+        output = f"{val}"
+    return output
+
 def arithmetic_op(op: str, arg1: float, arg2: float) -> float:
     return {
         "ADD": lambda x, y: x + y,
@@ -141,15 +177,30 @@ while len(call_stack) > 0:
     while curr.command_counter <= funcs[curr.fname].end_pos:
         cm = commands[curr.command_counter]
         if cm[0] == "READ":
-            val = float(input(f"type {cm[1]} >> "))
+            val = float(input(f"provide float value for variable [{cm[1]}] >> "))
             set_val(cm[1], curr.local_vars, val)
+        elif cm[0] == "FREAD":
+            path = cm[2].replace("\\", os.sep)
+            with open(path, "r") as f:
+                lines = f.readlines()
+            arr = [[float(el) for el in l.strip().split()] for l in lines if l]
+            if len(arr) == 1:
+                if len(arr[0]) == 1:
+                    set_val(cm[1], curr.local_vars, arr[0][0])
+                else:
+                    for i in range(len(arr[0])):
+                        set_val(f"{cm[1]}#{i+1}", curr.local_vars, arr[0][i])
+            elif len(arr) > 1:
+                for i in range(len(arr)):
+                    for j in range(len(arr[i])):
+                        set_val(f"{cm[1]}#{i + 1}:{j+1}", curr.local_vars, arr[i][j])
         elif cm[0] == "WRITE":
-            val = get_val(cm[1], curr.local_vars)
-            if isinstance(val, dict):
-                for ind in val:
-                    print(f"{cm[1]}#{ind} => {val[ind]}")
-            else:
-                print(get_val(cm[1], curr.local_vars))
+            print(get_output(cm[1], curr))
+        elif cm[0] == "FWRITE":
+            path = cm[2].replace("\\", os.sep)
+            output = get_output(cm[1], curr)
+            with open(path, "w") as f:
+                f.write(output)
         elif cm[0] == "TEXT":
             print(cm[1].replace("_", " "))
         elif cm[0] == "LEN":
@@ -171,7 +222,8 @@ while len(call_stack) > 0:
             curr.command_counter = int(cm[1])
             continue
         elif cm[0] == "GOTOIFNOT":
-            if get_val(cm[1], curr.local_vars) < 0:
+            cond_val = get_val(cm[1], curr.local_vars)
+            if cond_val is None or (isinstance(cond_val, float) and cond_val < 0):
                 curr.command_counter = int(cm[2])
                 continue
         elif cm[0] == "CALL":
