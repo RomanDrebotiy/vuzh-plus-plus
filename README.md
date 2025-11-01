@@ -20,7 +20,7 @@ Supports:
   - can be passed and returned from functions (by value)
 - expression temporary variable number optimization
 - input/output from the console
-- input/output from file (isolated float values or arrays)
+- input/output from file (isolated float values or arrays (input only for 1D/2D and output for any dimensions))
 - only one basic type: float
 
 ## Compilation and execution
