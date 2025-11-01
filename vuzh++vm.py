@@ -193,7 +193,7 @@ while len(call_stack) > 0:
             elif len(arr) > 1:
                 for i in range(len(arr)):
                     for j in range(len(arr[i])):
-                        set_val(f"{cm[1]}#{i + 1}:{j+1}", curr.local_vars, arr[i][j])
+                        set_val(f"{cm[1]}#{i+1}:{j+1}", curr.local_vars, arr[i][j])
         elif cm[0] == "WRITE":
             print(get_output(cm[1], curr))
         elif cm[0] == "FWRITE":
