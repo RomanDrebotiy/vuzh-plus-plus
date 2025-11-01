@@ -14,21 +14,22 @@ Supports:
 - loops
 - conditional blocks
 - functions
-- arrays
+- multidimensional arrays
   - with `len` operator
   - Pascal-style indexing (starting from 1)
+  - can be passed and returned from functions (by value)
 - expression temporary variable number optimization
 - input/output from the console
 - only one type: float
 
 ## Compilation and execution
-Save your code in `.vu` file (for example in the same folder where compiler is located) and then pass it to the compiler:
+Save your code in `.vu` file (for example in the same folder where compiler is located) and then pass it to the compiler. On Windows:
 ```bash
-python vuzh++compiler.py my_src_code.vu
+python vuzh++compiler.py .\examples\my_src_code.vu
 ```
 It will create `my_src_code.vuc` file, which you can run on the VM:
 ```bash
-python vuzh++vm.py my_src_code.vuc
+python vuzh++vm.py .\examples\my_src_code.vuc
 ```
 
 **(!)** You can find some code sample in the repo to explore the syntax.

@@ -18,14 +18,18 @@ func> factorial_sequence(start, end) {
         a#i = call> factorial(i);
         i = i + 1;
     }
+    return> a;
+}
+
+func> print_res(start, end, results) {
     // just testing arrays
-    l = len> a;
+    l = len> results;
     text> printing_initialized_array_length;
     write> l;
     text> printing_sequence_of_factorials;
     i = start;
     while[end - i]{
-        write> a#i;
+        write> results#i;
         i = i + 1;
     }
 }
@@ -33,7 +37,10 @@ func> factorial_sequence(start, end) {
 func> test1() {
     read> start;
     read> end;
-    call> factorial_sequence(start, end);
+    results = call> factorial_sequence(start, end);
+    call> print_res(start, end, results);
+    text> printing_second_time_other_way;
+    write> results;
 }
 
 func> test2() {
@@ -46,9 +53,32 @@ func> test2() {
     write> x;
 }
 
+func> test_matrix() {
+    i = 1;
+    while[3-i] {
+        j = 1;
+        while[3-j] {
+            a#i:j = i + j;
+            j = j + 1;
+        }
+        i = i + 1;
+    }
+    return> a;
+}
+
+func> test3() {
+    res = call> test_matrix();
+    text> testing_2D_arrays;
+    write> res;
+    text> output_dimensions_lengths;
+    l = len> res;
+    write> l;
+}
+
 func> main() {
     call> test1();
     call> test2();
+    call> test3();
     text> Done!;
 }
 

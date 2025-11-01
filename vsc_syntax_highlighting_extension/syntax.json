@@ -35,7 +35,7 @@
     },
     {
       "name": "variable.other.vuzh",
-      "match": "\\b[a-zA-Z_][a-zA-Z0-9_#]*\\b"
+      "match": "\\b[a-zA-Z_][a-zA-Z0-9_#:]*\\b"
     },
     {
       "name": "keyword.operator.assignment.vuzh",

@@ -18,21 +18,27 @@ GOTOIFNOT t0 20
 CALL factorial i a#i
 ADD i 1 i
 GOTO 15
-LEN a l
+RETURN a
+ENDFUNC
+FUNC print_res start end results
+LEN results l
 TEXT printing_initialized_array_length
 WRITE l
 TEXT printing_sequence_of_factorials
 COPY start i
 SUB end i t0
-GOTOIFNOT t0 30
-WRITE a#i
+GOTOIFNOT t0 33
+WRITE results#i
 ADD i 1 i
-GOTO 25
+GOTO 28
 ENDFUNC
 FUNC test1 
 READ start
 READ end
-CALL factorial_sequence start end _
+CALL factorial_sequence start end results
+CALL print_res start end results _
+TEXT printing_second_time_other_way
+WRITE results
 ENDFUNC
 FUNC test2 
 TEXT just_testing_expression_optimization
@@ -48,8 +54,31 @@ MUL 5 t0 t0
 ADD t1 t0 x
 WRITE x
 ENDFUNC
+FUNC test_matrix 
+COPY 1 i
+SUB 3 i t0
+GOTOIFNOT t0 68
+COPY 1 j
+SUB 3 j t0
+GOTOIFNOT t0 66
+ADD i j a#i:j
+ADD j 1 j
+GOTO 61
+ADD i 1 i
+GOTO 58
+RETURN a
+ENDFUNC
+FUNC test3 
+CALL test_matrix  res
+TEXT testing_2D_arrays
+WRITE res
+TEXT output_dimensions_lengths
+LEN res l
+WRITE l
+ENDFUNC
 FUNC main 
 CALL test1  _
 CALL test2  _
+CALL test3  _
 TEXT Done!
 ENDFUNC

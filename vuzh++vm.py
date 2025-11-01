@@ -22,7 +22,7 @@ class FuncDef:
 
 
 class StackFrame:
-    def __init__(self, fname: str, fargs: list, command_counter: int):
+    def __init__(self, fname: str, fargs: list[float | dict[str, float]], command_counter: int):
         self.fname = fname
         self.fargs = fargs
         self.local_vars = {}
@@ -71,17 +71,30 @@ call_stack = [
 def prepare_args(params: list[str], args: list):
     if len(params) != len(args):
         raise Exception("Wrong param list")
-    return {
-        params[i]: args[i]
-        for i in range(len(params))
-    }
+    result = {}
+    for i in range(len(params)):
+        if isinstance(args[i], dict):
+            for ind in args[i]:
+                result[f"{params[i]}#{ind}"] = args[i][ind]
+        else:
+            result[params[i]] = args[i]
+    return result
 
 
-def get_val(var, mem: dict[str, float]):
+def get_val(var, mem: dict[str, float]) -> float | dict[str, float]:
     if "#" not in var:
-        return mem[var] if var in mem else float(var)
+        if get_array_len(var, mem) == 0:
+            return mem[var] if var in mem else float(var)
+        arr_vals = {}
+        for k in mem:
+            if k.startswith(f"{var}#"):
+                _, ind = k.split("#")
+                arr_vals[ind] = mem[k]
+        return arr_vals
     parts = var.split("#")
-    return mem[f"{parts[0]}#{int(get_val(parts[1], mem))}"]
+    indices = parts[1].split(":")
+    indices_actual = ":".join([str(int(get_val(i, mem))) for i in indices])
+    return mem[f"{parts[0]}#{indices_actual}"]
 
 
 def set_val(var, mem: dict[str, float], val: float):
@@ -89,16 +102,26 @@ def set_val(var, mem: dict[str, float], val: float):
         mem[var] = float(val)
         return
     parts = var.split("#")
-    mem[f"{parts[0]}#{int(get_val(parts[1], mem))}"] = float(val)
+    indices = parts[1].split(":")
+    indices_actual = ":".join([str(int(get_val(i, mem))) for i in indices])
+    mem[f"{parts[0]}#{indices_actual}"] = float(val)
 
 
-def get_array_len(var, mem: dict[str, float]) -> int:
-    max_ind = 0
+def get_array_len(var, mem: dict[str, float]) -> int | list[int]:
+    max_ind = []
     for k in mem:
         if k.startswith(f"{var}#"):
             _, ind = k.split("#")
-            max_ind = max(int(ind), max_ind)
-    return int(max_ind)
+            indices = [int(i) for i in ind.split(":")]
+            if not max_ind:
+                max_ind = indices
+            else:
+                max_ind = [max(indices[i], max_ind[i]) for i in range(len(max_ind))]
+    if len(max_ind) > 1:
+        return max_ind
+    if len(max_ind) == 1:
+        return max_ind[0]
+    return 0
 
 
 def arithmetic_op(op: str, arg1: float, arg2: float) -> float:
@@ -121,11 +144,21 @@ while len(call_stack) > 0:
             val = float(input(f"type {cm[1]} >> "))
             set_val(cm[1], curr.local_vars, val)
         elif cm[0] == "WRITE":
-            print(get_val(cm[1], curr.local_vars))
+            val = get_val(cm[1], curr.local_vars)
+            if isinstance(val, dict):
+                for ind in val:
+                    print(f"{cm[1]}#{ind} => {val[ind]}")
+            else:
+                print(get_val(cm[1], curr.local_vars))
         elif cm[0] == "TEXT":
             print(cm[1].replace("_", " "))
         elif cm[0] == "LEN":
-            set_val(cm[2], curr.local_vars, get_array_len(cm[1], curr.local_vars))
+            arr_len = get_array_len(cm[1], curr.local_vars)
+            if isinstance(arr_len, list):
+                for i in range(len(arr_len)):
+                    set_val(f"{cm[2]}#{i+1}", curr.local_vars, arr_len[i])
+            else:
+                set_val(cm[2], curr.local_vars, arr_len)
         elif cm[0] == "COPY":
             set_val(cm[2], curr.local_vars, get_val(cm[1], curr.local_vars))
         elif cm[0] in ["ADD", "SUB", "MUL", "DIV"]:
@@ -157,7 +190,11 @@ while len(call_stack) > 0:
                     res = get_val(cm[1], curr.local_vars)
                     caller_res_var = commands[call_stack[-2].command_counter][-1]
                     if caller_res_var != "_":
-                        set_val(caller_res_var, call_stack[-2].local_vars, res)
+                        if isinstance(res, dict):
+                            for ind in res:
+                                set_val(f"{caller_res_var}#{ind}", call_stack[-2].local_vars, res[ind])
+                        else:
+                            set_val(caller_res_var, call_stack[-2].local_vars, res)
                 call_stack[-2].command_counter += 1
             call_stack.pop()
             break
