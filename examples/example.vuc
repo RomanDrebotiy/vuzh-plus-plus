@@ -85,10 +85,47 @@ WRITE arr
 TEXT testing_element_value_at_position_2_3
 WRITE arr#2:3
 ENDFUNC
+FUNC test5 
+TEXT matrix_multiplication_test
+FREAD m1 .\examples\matr1.txt
+FREAD m2 .\examples\matr2.txt
+LEN m1 dim1
+LEN m2 dim2
+TEXT matr1_dimenstions
+WRITE dim1
+TEXT matr2_dimenstions
+WRITE dim2
+TEXT matr1_elements
+WRITE m1
+TEXT matr2_elements
+WRITE m2
+COPY 1 i
+SUB dim1#1 i t0
+GOTOIFNOT t0 119
+COPY 1 j
+SUB dim2#2 j t0
+GOTOIFNOT t0 117
+COPY 1 k
+COPY 0 res#i:j
+SUB dim1#2 k t0
+GOTOIFNOT t0 115
+MUL m1#i:k m2#k:j t0
+ADD res#i:j t0 res#i:j
+ADD k 1 k
+GOTO 109
+ADD j 1 j
+GOTO 105
+ADD i 1 i
+GOTO 102
+TEXT result
+WRITE res
+FWRITE res .\examples\matr_mult.txt
+ENDFUNC
 FUNC main 
 CALL test1  _
 CALL test2  _
 CALL test3  _
 CALL test4  _
+CALL test5  _
 TEXT Done!
 ENDFUNC

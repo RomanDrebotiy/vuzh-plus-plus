@@ -88,11 +88,45 @@ func> test4() {
     write> arr#2:3;
 }
 
+func> test5() {
+    text> matrix_multiplication_test;
+    fread> m1, .\examples\matr1.txt;
+    fread> m2, .\examples\matr2.txt;
+    dim1 = len> m1;
+    dim2 = len> m2;
+    text> matr1_dimenstions;
+    write> dim1;
+    text> matr2_dimenstions;
+    write> dim2;
+    text> matr1_elements;
+    write> m1;
+    text> matr2_elements;
+    write> m2;
+    i = 1;
+    while[dim1#1 - i] {
+        j = 1;
+        while[dim2#2 - j] {
+            k = 1;
+            res#i:j = 0;
+            while[dim1#2 - k] {
+                res#i:j = res#i:j + m1#i:k * m2#k:j;
+                k = k + 1;
+            }
+            j= j + 1;
+        }
+        i = i + 1;
+    }
+    text> result;
+    write> res;
+    fwrite> res, .\examples\matr_mult.txt;
+}
+
 func> main() {
     call> test1();
     call> test2();
     call> test3();
     call> test4();
+    call> test5();
     text> Done!;
 }
 
