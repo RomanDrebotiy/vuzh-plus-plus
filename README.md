@@ -16,8 +16,9 @@ Supports:
 - functions
 - multidimensional arrays
   - with `len` operator
-  - Pascal-style indexing (starting from 1)
+  - indexing starting from 1
   - can be passed and returned from functions (by value)
+  - sparse internally and are allocated element-by-element
 - expression temporary variable number optimization
 - input/output from the console
 - input/output from file (isolated float values or arrays (input only for 1D/2D and output for any dimensions))
