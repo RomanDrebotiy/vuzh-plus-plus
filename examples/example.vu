@@ -121,12 +121,41 @@ func> test5() {
     fwrite> res, .\examples\matr_mult.txt;
 }
 
+func> tail_recursion_factorial(n, s) {
+    if[0-n] {
+        return> s;
+    }
+    s1 = s * n;
+    n1 = n-1;
+    res = call> tail_recursion_factorial(n1, s1);
+    return> res;
+}
+
+func> tail_recursion_factorial_seq(n, s) {
+    write> s;
+    if[0-n] {
+        return>;
+    }
+    s1 = s * n;
+    n1 = n-1;
+    call> tail_recursion_factorial_seq(n1, s1);
+}
+
+func> test6() {
+    // testing different cases of tail recursion
+    text> tail_recursion;
+    res = call> tail_recursion_factorial(5, 1);
+    write> res;
+    call> tail_recursion_factorial_seq(5, 1);
+}
+
 func> main() {
     call> test1();
     call> test2();
     call> test3();
     call> test4();
     call> test5();
+    call> test6();
     text> Done!;
 }
 

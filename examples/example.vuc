@@ -121,11 +121,39 @@ TEXT result
 WRITE res
 FWRITE res .\examples\matr_mult.txt
 ENDFUNC
+FUNC tail_recursion_factorial n s
+SUB 0 n t0
+GOTOIFNOT t0 127
+RETURN s
+MUL s n s1
+SUB n 1 n1
+COPY n1 n
+COPY s1 s
+GOTO 124
+ENDFUNC
+FUNC tail_recursion_factorial_seq n s
+WRITE s
+SUB 0 n t0
+GOTOIFNOT t0 138
+RETURN
+MUL s n s1
+SUB n 1 n1
+COPY n1 n
+COPY s1 s
+GOTO 134
+ENDFUNC
+FUNC test6 
+TEXT tail_recursion
+CALL tail_recursion_factorial 5 1 res
+WRITE res
+CALL tail_recursion_factorial_seq 5 1 _
+ENDFUNC
 FUNC main 
 CALL test1  _
 CALL test2  _
 CALL test3  _
 CALL test4  _
 CALL test5  _
+CALL test6  _
 TEXT Done!
 ENDFUNC

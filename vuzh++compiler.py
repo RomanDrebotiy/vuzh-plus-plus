@@ -1,11 +1,34 @@
 # Copyright (c) 2025 Roman Drebotiy
 # Licensed under the Apache License 2.0 (see LICENSE file)
 
-import sys
 from pathlib import Path
+import argparse
 
-fn = sys.argv[1]
-fn_out = sys.argv[2] if len(sys.argv) > 2 else f"{fn}c"
+parser = argparse.ArgumentParser(description="Vuzh++ compiler")
+
+parser.add_argument(
+    "input",
+    help="Full path to the .vu file"
+)
+
+parser.add_argument(
+    "output",
+    nargs="?",
+    help="Full path to the output .vuc file (optional)"
+)
+
+parser.add_argument(
+    "--tail",
+    action="store_true",
+    help="Enable tail recursion optimization"
+)
+
+args = parser.parse_args()
+
+fn = args.input
+fn_out = args.output if args.output is not None else f"{fn}c"
+
+TAIL_RECURSION_OPTIMIZATION_ENABLED = args.tail
 
 
 if Path(fn).suffix != ".vu":
@@ -157,15 +180,29 @@ def convert_tree_to_cmd_list(root):
     commands.append(get_command(l, r, root.token, root.res_var))
 
 
+def is_const_operator_condition():
+    if tokens[ind+1] == "]":
+        try:
+            float(tokens[ind])
+            return True
+        except Exception:
+            return False
+    return False
+
+
 def handle_operator():
     global ind
     is_loop = tokens[ind] == "while"
     loop_return_pos = len(commands)
     ind += 2
-    res_var = handle_expression()
+    if is_const_operator_condition():
+        res_var = tokens[ind]
+        ind += 3
+    else:
+        res_var = handle_expression()
+        ind += 2
     gotoifnot_pos = len(commands)
     commands.append(f"GOTOIFNOT {res_var} _")
-    ind += 2
     handle_block()
     ind += 1
     if is_loop:
@@ -230,16 +267,51 @@ def handle_expression(res_var: str = None) -> str:
     return commands[-1].split()[-1]
 
 
+def is_tail_recursion(func_name: str, func_start_pos: int):
+    last_cmd = commands[-1].strip().split(" ")
+    prev_cmd = commands[-2].strip().split(" ")
+    tail = (last_cmd[0] == "CALL" and last_cmd[1] == func_name) or (last_cmd[0] == "RETURN" and last_cmd[-1] == prev_cmd[-1])
+    if not tail:
+        return False
+
+    cnt = 0
+    for i in range(func_start_pos, len(commands)):
+        cmd = commands[i].strip().split(" ")
+        if cmd[0] == "CALL" and cmd[1] == func_name:
+            cnt += 1
+
+    return cnt == 1
+
+
+def handle_tail_recursion(func_name: str, func_args: str, func_body_start_pos: int):
+    global commands
+    call_cmd_ind = -1 if commands[-1].startswith("CALL") else -2
+    call_cmd = commands[call_cmd_ind]
+    commands = commands[:call_cmd_ind]
+    if len(func_args) > 0:
+        formal_args = func_args.split(" ")
+        actual_args = call_cmd.split(" ")[2:-1]
+        if len(formal_args) != len(actual_args):
+            raise Exception(f"{func_name} call signature mismatch!")
+        for actual, formal in zip(actual_args, formal_args):
+            commands.append(f"COPY {actual} {formal}")
+    commands.append(f"GOTO {func_body_start_pos}")
+
+
 def handle_function():
-    global ind
+    global ind, commands
     start_args = end_args = ind + 4
     while tokens[end_args] != ")":
         end_args += 1
-    func_args = "".join(tokens[start_args:end_args]).replace(",", " ")
-    commands.append(f"FUNC {tokens[ind+2]} {func_args}")
+    func_args = "".join(tokens[start_args:end_args]).replace(",", " ").strip()
+    func_name = tokens[ind+2]
+    commands.append(f"FUNC {func_name} {func_args}")
+    func_body_start_pos = len(commands)
     ind = end_args + 2
     handle_block()
     ind += 1
+    if TAIL_RECURSION_OPTIMIZATION_ENABLED and is_tail_recursion(func_name, func_body_start_pos):
+        handle_tail_recursion(func_name, func_args, func_body_start_pos)
     commands.append("ENDFUNC")
 
 

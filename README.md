@@ -23,11 +23,12 @@ Supports:
 - input/output from the console
 - input/output from file (isolated float values or arrays (input only for 1D/2D and output for any dimensions))
 - only one basic type: float
+- tail recursion optimization (disabled by default. Can be enabled by passing `--tail` flag to the compiler)
 
 ## Compilation and execution
 Save your code in `.vu` file (for example in `.\examples\my_src_code.vu` (relative to the compiler)) and then pass it to the compiler. On Windows:
 ```bash
-python vuzh++compiler.py .\examples\my_src_code.vu
+python vuzh++compiler.py --tail .\examples\my_src_code.vu
 ```
 It will create `my_src_code.vuc` file, which you can run on the VM:
 ```bash
