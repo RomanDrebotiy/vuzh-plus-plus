@@ -270,7 +270,9 @@ def handle_expression(res_var: str = None) -> str:
 def is_tail_recursion(func_name: str, func_start_pos: int):
     last_cmd = commands[-1].strip().split(" ")
     prev_cmd = commands[-2].strip().split(" ")
-    tail = (last_cmd[0] == "CALL" and last_cmd[1] == func_name) or (last_cmd[0] == "RETURN" and last_cmd[-1] == prev_cmd[-1])
+    tail = ((last_cmd[0] == "CALL" and last_cmd[1] == func_name)
+            or (prev_cmd[0] == "CALL" and prev_cmd[1] == func_name
+                and last_cmd[0] == "RETURN" and last_cmd[-1] == prev_cmd[-1]))
     if not tail:
         return False
 
