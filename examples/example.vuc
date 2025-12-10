@@ -136,10 +136,8 @@ WRITE s
 SUB 0 n t0
 GOTOIFNOT t0 138
 RETURN
-MUL s n s1
-SUB n 1 n1
-COPY n1 n
-COPY s1 s
+MUL s n s
+SUB n 1 n
 GOTO 134
 ENDFUNC
 FUNC test6 

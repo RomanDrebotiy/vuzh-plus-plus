@@ -296,7 +296,8 @@ def handle_tail_recursion(func_name: str, func_args: str, func_body_start_pos: i
         if len(formal_args) != len(actual_args):
             raise Exception(f"{func_name} call signature mismatch!")
         for actual, formal in zip(actual_args, formal_args):
-            commands.append(f"COPY {actual} {formal}")
+            if actual != formal:
+                commands.append(f"COPY {actual} {formal}")
     commands.append(f"GOTO {func_body_start_pos}")
 
 

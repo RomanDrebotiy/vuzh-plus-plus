@@ -136,9 +136,9 @@ func> tail_recursion_factorial_seq(n, s) {
     if[0-n] {
         return>;
     }
-    s1 = s * n;
-    n1 = n-1;
-    call> tail_recursion_factorial_seq(n1, s1);
+    s = s * n;
+    n = n-1;
+    call> tail_recursion_factorial_seq(n, s);
 }
 
 func> test6() {
