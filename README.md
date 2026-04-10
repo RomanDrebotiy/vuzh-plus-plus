@@ -50,7 +50,8 @@ Language is created for educational purposes.
 
 Currently, it lacks error handling and syntax checks with hints.
 
+Written without code generation by AI tools.
 
-*Copyright (c) 2025 Roman Drebotiy*
+*Copyright (c) 2026 Roman Drebotiy*
 
 *Licensed under the Apache License 2.0 (see LICENSE file)*
