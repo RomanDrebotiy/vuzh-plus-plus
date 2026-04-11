@@ -50,7 +50,7 @@ Language is created for educational purposes.
 
 Currently, it lacks error handling and syntax checks with hints.
 
-Written without code generation by AI tools.
+**Written without code generation by AI tools.**
 
 *Copyright (c) 2026 Roman Drebotiy*
 
